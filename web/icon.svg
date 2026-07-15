@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="IT Uptime and Security Scorecard">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a4b78"/>
+      <stop offset="0.55" stop-color="#1177b8"/>
+      <stop offset="1" stop-color="#17a0c4"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b93d6"/>
+      <stop offset="1" stop-color="#1470ad"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#062a45" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- app tile -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)"/>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="3"/>
+  <!-- gloss highlight -->
+  <path d="M40 200 A112 112 0 0 1 152 40 H360 A112 112 0 0 1 472 152 V180 Q256 60 40 180 Z" fill="#ffffff" opacity="0.06"/>
+
+  <!-- security shield -->
+  <path d="M174 150 H338 A22 22 0 0 1 360 172 V262 C360 328 320 370 256 396 C192 370 152 328 152 262 V172 A22 22 0 0 1 174 150 Z"
+        fill="#ffffff" filter="url(#shadow)"/>
+
+  <!-- scorecard bars (rising) -->
+  <g>
+    <rect x="192" y="294" width="30" height="28" rx="7" fill="url(#bar)"/>
+    <rect x="241" y="270" width="30" height="52" rx="7" fill="url(#bar)"/>
+    <rect x="290" y="242" width="30" height="80" rx="7" fill="url(#bar)"/>
+  </g>
+
+  <!-- uptime trend line + arrow (healthy green) -->
+  <polyline points="182,302 233,286 283,258 312,234" fill="none" stroke="#17a673"
+            stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M326 214 L300 224 L318 244 Z" fill="#17a673"/>
+</svg>

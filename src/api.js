@@ -50,12 +50,13 @@ export function startApi(cfg, connectorState) {
       }
 
       // ---- auth gate ----
+      // Assets the login page needs must be reachable before sign-in.
+      const PUBLIC = new Set(['/login.html', '/icon.svg', '/favicon.ico']);
       const who = authenticate(req);
-      const isPage = !path.startsWith('/api/');
       if (!who) {
-        if (isPage && path !== '/login.html') { res.writeHead(302, { Location: '/login.html' }); return res.end(); }
-        if (isPage) { /* allow login.html + assets below */ }
-        else return send(res, 401, { error: 'authentication required' });
+        if (path.startsWith('/api/')) return send(res, 401, { error: 'authentication required' });
+        if (!PUBLIC.has(path)) { res.writeHead(302, { Location: '/login.html' }); return res.end(); }
+        // public asset → fall through to static serving
       }
 
       // ---- authenticated API ----
