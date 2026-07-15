@@ -1,4 +1,4 @@
-# Nonin IT Uptime &amp; Security Scorecard — Collector
+#IT Uptime &amp; Security Scorecard — Collector
 
 A self-contained, **agentless** monitoring appliance that installs on one network server and
 produces a live IT Uptime &amp; Security Scorecard. It probes machines for availability, ingests
