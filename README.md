@@ -27,7 +27,7 @@ dependencies (Node 22 built-ins only); ships as one small Docker container.
 ## 1. Quick start
 
 ```bash
-cd nonin-scorecard-collector
+cd quisitive-scorecard-collector
 docker compose up -d --build
 ```
 - UI: `http://<server>:8080` → you'll be redirected to a login page.

@@ -198,7 +198,7 @@
     <div class="field-grid">
       <div class="field">
         <label>Organization</label>
-        <input id="org" placeholder="Nonin Medical, Inc.">
+        <input id="org" placeholder="Quisitive">
       </div>
       <div class="field">
         <label>Reporting period label</label>
@@ -345,7 +345,7 @@ const EVENT_SOURCES = [
 function blankPeriod(label){
   return {
     id: "p_" + Math.random().toString(36).slice(2,9),
-    org:"Nonin Medical, Inc.", periodLabel: label || "", preparedBy:"Quisitive — Managed Security",
+    org:"Quisitive", periodLabel: label || "", preparedBy:"Quisitive — Managed Security",
     uptime:{avail:240, down:0, degraded:0, notes:""},
     notices:[],
     events:{ endpoint:{dp:0,esc:0,int:0}, ids:{dp:0,esc:0,int:0}, defender:{dp:0,esc:0,int:0} },

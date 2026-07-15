@@ -1,4 +1,4 @@
-# Installing the Nonin IT Scorecard Collector (Windows Service)
+# Installing the Quisitive IT Scorecard Collector (Windows Service)
 
 This installs the collector as an always-on **Windows Service** with a **bundled Node.js
 runtime** — the target server needs nothing pre-installed. No Docker required.
@@ -18,7 +18,7 @@ runtime** — the target server needs nothing pre-installed. No Docker required.
 
 ### Unattended / scripted install
 ```powershell
-.\install.ps1 -Silent -InstallDir "C:\Program Files\NoninScorecard" `
+.\install.ps1 -Silent -InstallDir "C:\Program Files\QuisitiveScorecard" `
   -HttpPort 8080 -SyslogUdpPort 514 -SyslogTcpPort 514 `
   -OpenFirewall Yes -StartService -AdminPassword 'ChangeMe!23'
 ```
@@ -30,9 +30,9 @@ runtime** — the target server needs nothing pre-installed. No Docker required.
 Prints every action it *would* take (no files copied, no service/firewall changes).
 
 ## What it does
-- Copies the app to the install directory (default `C:\Program Files\NoninScorecard`).
+- Copies the app to the install directory (default `C:\Program Files\QuisitiveScorecard`).
 - Places the bundled `runtime\node.exe` (or downloads Node 22 if not bundled).
-- Registers a Windows Service **"Nonin IT Scorecard Collector"** via the WinSW wrapper
+- Registers a Windows Service **"Quisitive IT Scorecard Collector"** via the WinSW wrapper
   (auto-start, auto-restart on failure, rolling logs under `service\logs`).
 - Opens inbound firewall rules for the web and syslog ports (if you chose Yes).
 - Starts the service and opens the browser.
@@ -40,8 +40,8 @@ Prints every action it *would* take (no files copied, no service/firewall change
 ## Managing the service
 | Action | Command |
 |---|---|
-| Start / stop / restart | `services.msc` → "Nonin IT Scorecard Collector", or `service\NoninScorecard.exe restart` |
-| View logs | `<InstallDir>\service\logs\NoninScorecard.out.log` (and `.err.log`) |
+| Start / stop / restart | `services.msc` → "Quisitive IT Scorecard Collector", or `service\QuisitiveScorecard.exe restart` |
+| View logs | `<InstallDir>\service\logs\QuisitiveScorecard.out.log` (and `.err.log`) |
 | Edit settings | `<InstallDir>\config\collector.json`, then restart the service |
 | Data / DB / reports | `<InstallDir>\data\` |
 
@@ -69,8 +69,8 @@ powershell -ExecutionPolicy Bypass -File .\uninstall.ps1 -RemoveData -Silent
 
 From a build machine with internet:
 ```powershell
-cd nonin-scorecard-collector\installer
+cd quisitive-scorecard-collector\installer
 .\package-installer.ps1                 # downloads Node + WinSW, produces a fully offline bundle
 .\package-installer.ps1 -SkipDownloads  # smaller; target fetches Node + WinSW at install time
 ```
-Output: `dist\NoninScorecard-Installer-<version>.zip`. Ship that zip to operators.
+Output: `dist\QuisitiveScorecard-Installer-<version>.zip`. Ship that zip to operators.

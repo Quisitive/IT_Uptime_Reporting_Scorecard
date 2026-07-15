@@ -144,7 +144,7 @@ export function startApi(cfg, connectorState) {
         return send(res, 200, { ok: true }); }
       if (path === '/api/smtp/test' && method === 'POST') { const b = await readBody(req);
         try { await sendMail({ ...cfg.reporting.smtp }, { from: cfg.reporting.destinations.email.from, to: b.to || cfg.reporting.destinations.email.to,
-          subject: 'IT Scorecard SMTP test', text: 'This is a test message from the Nonin Scorecard Collector.' });
+          subject: 'IT Scorecard SMTP test', text: 'This is a test message from the Quisitive Scorecard Collector.' });
           return send(res, 200, { ok: true }); } catch (e) { return send(res, 200, { ok: false, error: e.message }); } }
 
       // ---- dashboards ----

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Installs the Nonin IT Uptime & Security Scorecard Collector as a Windows Service.
+  Installs the Quisitive IT Uptime & Security Scorecard Collector as a Windows Service.
 .DESCRIPTION
   Interactive wizard (or unattended with -Silent). Stages the app + a bundled Node 22
   runtime, registers a Windows Service via the WinSW wrapper, opens firewall ports, and
@@ -14,7 +14,7 @@
 #>
 [CmdletBinding()]
 param(
-  [string]$InstallDir   = "C:\Program Files\NoninScorecard",
+  [string]$InstallDir   = "C:\Program Files\QuisitiveScorecard",
   [int]$HttpPort        = 8080,
   [int]$SyslogUdpPort   = 514,
   [int]$SyslogTcpPort   = 514,
@@ -28,8 +28,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$ServiceId   = 'NoninScorecard'
-$ServiceName = 'Nonin IT Scorecard Collector'
+$ServiceId   = 'QuisitiveScorecard'
+$ServiceName = 'Quisitive IT Scorecard Collector'
 
 function Step($m){ Write-Host "`n== $m ==" -ForegroundColor Cyan }
 function Info($m){ Write-Host "   $m" }
@@ -41,7 +41,7 @@ function Ask($label, $default){
 }
 function XmlEsc($s){ return ($s -replace '&','&amp;' -replace '<','&lt;' -replace '>','&gt;' -replace '"','&quot;') }
 
-Write-Host "Nonin IT Uptime & Security Scorecard - Installer" -ForegroundColor Green
+Write-Host "Quisitive IT Uptime & Security Scorecard - Installer" -ForegroundColor Green
 Write-Host "=================================================="
 
 # --- admin check ---
@@ -162,9 +162,9 @@ if($StartService){ Do-Op "start service" { & $svcExe start | Out-Null } }
 if($OpenFirewall -match '^(y|yes)$'){
   Step "Firewall rules"
   $rules = @(
-    @{ n = "Nonin Scorecard UI ($HttpPort/TCP)";      p = 'TCP'; port = $HttpPort },
-    @{ n = "Nonin Scorecard syslog ($SyslogUdpPort/UDP)"; p = 'UDP'; port = $SyslogUdpPort },
-    @{ n = "Nonin Scorecard syslog ($SyslogTcpPort/TCP)"; p = 'TCP'; port = $SyslogTcpPort }
+    @{ n = "Quisitive Scorecard UI ($HttpPort/TCP)";      p = 'TCP'; port = $HttpPort },
+    @{ n = "Quisitive Scorecard syslog ($SyslogUdpPort/UDP)"; p = 'UDP'; port = $SyslogUdpPort },
+    @{ n = "Quisitive Scorecard syslog ($SyslogTcpPort/TCP)"; p = 'TCP'; port = $SyslogTcpPort }
   )
   foreach($r in $rules){
     Do-Op "allow inbound $($r.p) $($r.port)" {

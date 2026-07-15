@@ -1,5 +1,5 @@
 {
-  "org": "Nonin Medical, Inc.",
+  "org": "Quisitive",
   "http": { "port": 8080 },
 
   "auth": {
@@ -89,7 +89,7 @@
     "destinations": {
       "local": { "enabled": true, "dir": "./data/reports" },
       "http":  { "enabled": false, "url": "", "method": "PUT" },
-      "email": { "enabled": false, "to": [], "from": "scorecard@nonin.local", "subjectPrefix": "[IT Scorecard]" }
+      "email": { "enabled": false, "to": [], "from": "scorecard@quisitive.com", "subjectPrefix": "[IT Scorecard]" }
     },
     "smtp": { "host": "", "port": 25, "secure": "none", "authUser": "", "note": "secure: none|starttls|tls. Password via SMTP_PASSWORD env or the wizard." }
   },

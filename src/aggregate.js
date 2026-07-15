@@ -66,7 +66,7 @@ export function buildScorecard(cfg, period) {
   });
 
   return {
-    period, generatedAt: Date.now(), org: cfg.org || 'Nonin Medical, Inc.',
+    period, generatedAt: Date.now(), org: cfg.org || 'Quisitive',
     uptime: { hrsAvailability: availHrs, hrsDown: +measuredDownHrs.toFixed(2), hrsDegraded: +degradedHrs.toFixed(2),
       uptimePct: +uptimePct.toFixed(2), uptimeTargetPct, referenceBusinessHrs, samples: sysRow?.n || 0 },
     incidents: { total: notices.length, tiers: tierCounts, notices },
