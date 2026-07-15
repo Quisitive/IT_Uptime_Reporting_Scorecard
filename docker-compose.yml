@@ -1,7 +1,7 @@
 services:
   collector:
     build: .
-    container_name: nonin-scorecard-collector
+    container_name: scorecard-collector
     restart: unless-stopped
     ports:
       - "8080:8080"        # Scorecard UI + REST API (put a TLS reverse proxy in front to expose)
@@ -34,5 +34,5 @@ services:
       # ---- Report HTTP upload target (optional) ----
       REPORT_HTTP_TOKEN: ""
       # ---- SAN REST creds (optional; name upper-cased, non-alphanumerics -> _) ----
-      # SAN_SAN01_NIMBLE_PROD_13700_URL: "https://..."
-      # SAN_SAN01_NIMBLE_PROD_13700_TOKEN: "..."
+      # SAN_SAN_PROD_01_URL: "https://..."
+      # SAN_SAN_PROD_01_TOKEN: "..."

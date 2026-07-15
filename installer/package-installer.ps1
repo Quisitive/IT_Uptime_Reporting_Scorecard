@@ -4,7 +4,7 @@
 .DESCRIPTION
   Stages the app under installer\payload, optionally downloads the bundled Node runtime and
   the WinSW service wrapper into the payload (so the target server needs no internet), then
-  zips the installer folder to dist\NoninScorecard-Installer-<version>.zip.
+  zips the installer folder to dist\ITScorecard-Installer-<version>.zip.
 
   The recipient unzips it and runs install.ps1 as Administrator.
 .EXAMPLE
@@ -52,14 +52,14 @@ if(-not $SkipDownloads){
 
 Step "Zipping bundle"
 New-Item -ItemType Directory -Force -Path $distDir | Out-Null
-$stage = Join-Path $env:TEMP "nonin-installer-stage"
+$stage = Join-Path $env:TEMP "scorecard-installer-stage"
 if(Test-Path $stage){ Remove-Item $stage -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $stage | Out-Null
 Copy-Item $payload -Destination (Join-Path $stage 'payload') -Recurse -Force
 Copy-Item (Join-Path $PSScriptRoot 'install.ps1')   -Destination $stage -Force
 Copy-Item (Join-Path $PSScriptRoot 'uninstall.ps1') -Destination $stage -Force
 Copy-Item (Join-Path $PSScriptRoot 'INSTALL.md')    -Destination $stage -Force
-$zip = Join-Path $distDir "NoninScorecard-Installer-$version.zip"
+$zip = Join-Path $distDir "ITScorecard-Installer-$version.zip"
 if(Test-Path $zip){ Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -Force
 Remove-Item $stage -Recurse -Force

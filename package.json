@@ -1,5 +1,5 @@
 {
-  "name": "nonin-scorecard-collector",
+  "name": "scorecard-collector",
   "version": "0.1.0",
   "description": "Agentless network metrics collector that feeds the IT Uptime & Security Scorecard (syslog + availability probing + cloud connectors).",
   "type": "module",

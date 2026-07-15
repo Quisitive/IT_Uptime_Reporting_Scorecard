@@ -1,4 +1,4 @@
-# Nonin IT Uptime &amp; Security Scorecard — Collector
+# IT Uptime &amp; Security Scorecard — Collector
 
 A self-contained, **agentless** monitoring appliance that installs on one network server and
 produces a live IT Uptime &amp; Security Scorecard. It probes machines for availability, ingests
@@ -27,7 +27,7 @@ dependencies (Node 22 built-ins only); ships as one small Docker container.
 ## 1. Quick start
 
 ```bash
-cd nonin-scorecard-collector
+cd scorecard-collector
 docker compose up -d --build
 ```
 - UI: `http://<server>:8080` → you'll be redirected to a login page.
@@ -81,7 +81,7 @@ until configured.
 Machines are the `probe.targets` array in `config/collector.json`:
 
 ```json
-{ "name": "DC01", "host": "10.0.0.10", "port": 3389, "critical": true, "os": "windows", "group": "Domain Controllers" }
+{ "name": "SERVER01", "host": "10.0.0.10", "port": 3389, "critical": true, "os": "windows", "group": "Domain Controllers" }
 ```
 
 | Field | Meaning |
@@ -141,7 +141,7 @@ Point log sources at **udp/tcp 514** (RFC 3164 and 5424 both parsed).
 
 Test:
 ```bash
-printf '<11>1 2026-06-15T09:00:00Z DC01 EventLog - - - EventID=6008 previous shutdown unexpected' | nc -u -w1 <server> 514
+printf '<11>1 2026-06-15T09:00:00Z SERVER01 EventLog - - - EventID=6008 previous shutdown unexpected' | nc -u -w1 <server> 514
 ```
 
 ### Azure Monitor Agent (AMA) — pull instead of forward
@@ -184,8 +184,8 @@ SANs are listed under `sans`. Capacity can arrive four ways: **SNMP poll**, **RE
 **syslog capacity alerts**, or **manual entry** (Disk screen / `POST /api/disk`).
 
 ```json
-{ "name": "SAN01-NIMBLE-PROD-13700", "type": "nimble",
-  "syslogHost": "nimble-prod-13700",
+{ "name": "SAN-PROD-01", "type": "nimble",
+  "syslogHost": "san-prod-01",
   "snmpHost": "10.0.5.10",
   "oids": { "used": "1.3.6.1.4.1.12740...", "total": "1.3.6.1.4.1.12740..." } }
 ```
@@ -193,7 +193,7 @@ SANs are listed under `sans`. Capacity can arrive four ways: **SNMP poll**, **RE
 **SAN name mapping — important.** The array's display name (`name`) is what the whole app keys
 on. But other sources report different identifiers:
 - **Syslog**: matched by the message's hostname. Set `syslogHost` to the hostname the array
-  actually sends (e.g. `nimble-prod-13700`) so capacity alerts and disk figures attach to the
+  actually sends (e.g. `san-prod-01`) so capacity alerts and disk figures attach to the
   right array. Without it, a capacity alert would be stored under the raw syslog hostname and
   wouldn't show on the Disk screen.
 - **SNMP/REST**: keyed by `snmpHost` / env creds → written back under `name`.

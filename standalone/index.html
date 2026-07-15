@@ -198,7 +198,7 @@
     <div class="field-grid">
       <div class="field">
         <label>Organization</label>
-        <input id="org" placeholder="Nonin Medical, Inc.">
+        <input id="org" placeholder="Your Organization">
       </div>
       <div class="field">
         <label>Reporting period label</label>
@@ -206,7 +206,7 @@
       </div>
       <div class="field">
         <label>Prepared by</label>
-        <input id="preparedBy" placeholder="Quisitive — Managed Security">
+        <input id="preparedBy" placeholder="Prepared By">
       </div>
     </div>
     <div class="toolbar" style="margin-top:14px">
@@ -301,7 +301,7 @@
         <b>Endpoint Security</b> — Defender monthly activity report → “Total OverWatch-analyzed events” (Data Points). Escalations = cases opened to inform of an alert (search “Defender” in the ticket queue, last month). Interventions = tickets requiring action as an incident.<br><br>
         <b>Intrusion Detection System</b> — Perch Hero Dashboard, range “Last Month”. SOC activity → “Analyzed Logs” (Data Points), “Escalated Alerts” (Escalations). Interventions = escalations that became incidents.<br><br>
         <b>Microsoft Defender</b> — Incidents dashboard, 1st of last month 00:00 → 1st of this month 00:00. Data Points = incidents (status New/In Progress/Resolved; severity Low/Medium/High). Escalations = incidents acted on (severity Medium/High). Interventions = alerts marked True Positive requiring action.<br><br>
-        <b>Disk</b> — Production &amp; Backup SANs (SAN01-NIMBLE-PROD-13700, SAN01-NIMBLE-COLO-USI, MSA), via array interface or SwICE Consulting.
+        <b>Disk</b> — Production &amp; Backup SANs, via array interface.
       </div>
     </details>
     <details class="help"><summary>How the Overall Health Index is scored (adjustable)</summary>
@@ -345,15 +345,11 @@ const EVENT_SOURCES = [
 function blankPeriod(label){
   return {
     id: "p_" + Math.random().toString(36).slice(2,9),
-    org:"Nonin Medical, Inc.", periodLabel: label || "", preparedBy:"Quisitive — Managed Security",
+    org:"", periodLabel: label || "", preparedBy:"",
     uptime:{avail:240, down:0, degraded:0, notes:""},
     notices:[],
     events:{ endpoint:{dp:0,esc:0,int:0}, ids:{dp:0,esc:0,int:0}, defender:{dp:0,esc:0,int:0} },
-    sans:[
-      {name:"SAN01-NIMBLE-PROD-13700", used:0, total:0},
-      {name:"SAN01-NIMBLE-COLO-USI",  used:0, total:0},
-      {name:"MSA",                     used:0, total:0}
-    ]
+    sans:[]
   };
 }
 

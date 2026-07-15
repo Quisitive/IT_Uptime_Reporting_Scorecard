@@ -1,5 +1,5 @@
 {
-  "org": "Nonin Medical, Inc.",
+  "org": "Your Organization",
   "http": { "port": 8080 },
 
   "auth": {
@@ -27,11 +27,6 @@
     "downAfterFails": 2,
     "note": "concurrency caps simultaneous probes so thousands of hosts stay light. A host is 'down' only after downAfterFails consecutive failures (debounces blips).",
     "targets": [
-      { "name": "DC01",       "host": "10.0.0.10", "port": 3389, "critical": true,  "os": "windows", "group": "Domain Controllers" },
-      { "name": "DC02",       "host": "10.0.0.11", "port": 3389, "critical": true,  "os": "windows", "group": "Domain Controllers" },
-      { "name": "FileServer", "host": "10.0.0.20", "port": 445,  "critical": true,  "os": "windows", "group": "File & Print" },
-      { "name": "AppLinux01", "host": "10.0.0.30", "port": 22,   "critical": false, "os": "linux",   "group": "Application Servers" },
-      { "name": "WebPortal",  "host": "10.0.0.40", "port": 443,  "critical": true,  "os": "linux",   "group": "Application Servers" }
     ]
   },
 
@@ -48,9 +43,6 @@
   ],
 
   "sans": [
-    { "name": "SAN01-NIMBLE-PROD-13700", "type": "nimble", "syslogHost": "nimble-prod-13700" },
-    { "name": "SAN01-NIMBLE-COLO-USI",   "type": "nimble", "syslogHost": "nimble-colo-usi" },
-    { "name": "MSA",                     "type": "msa",    "syslogHost": "msa" }
   ],
 
   "scoring": {
@@ -89,7 +81,7 @@
     "destinations": {
       "local": { "enabled": true, "dir": "./data/reports" },
       "http":  { "enabled": false, "url": "", "method": "PUT" },
-      "email": { "enabled": false, "to": [], "from": "scorecard@nonin.local", "subjectPrefix": "[IT Scorecard]" }
+      "email": { "enabled": false, "to": [],       "from": "scorecard@example.com", "subjectPrefix": "[IT Scorecard]" }
     },
     "smtp": { "host": "", "port": 25, "secure": "none", "authUser": "", "note": "secure: none|starttls|tls. Password via SMTP_PASSWORD env or the wizard." }
   },

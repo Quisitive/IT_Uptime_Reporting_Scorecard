@@ -1,18 +1,18 @@
 <#
 .SYNOPSIS
-  Uninstalls the Nonin IT Scorecard Collector Windows Service and (optionally) its data.
+  Uninstalls the IT Scorecard Collector Windows Service and (optionally) its data.
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
-  .\uninstall.ps1 -InstallDir "C:\Program Files\NoninScorecard" -RemoveData -Silent
+  .\uninstall.ps1 -InstallDir "C:\Program Files\ITScorecard" -RemoveData -Silent
 #>
 [CmdletBinding()]
 param(
-  [string]$InstallDir = "C:\Program Files\NoninScorecard",
+  [string]$InstallDir = "C:\Program Files\ITScorecard",
   [switch]$RemoveData,
   [switch]$Silent
 )
 $ErrorActionPreference = 'Continue'
-$ServiceId = 'NoninScorecard'
+$ServiceId = 'ITScorecard'
 $svcExe = Join-Path $InstallDir "service\$ServiceId.exe"
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
@@ -27,7 +27,7 @@ if(Test-Path $svcExe){
 } else { Write-Host "   service wrapper not found (already removed?)" }
 
 # firewall rules
-Get-NetFirewallRule -DisplayName 'Nonin Scorecard*' -ErrorAction SilentlyContinue | ForEach-Object {
+Get-NetFirewallRule -DisplayName 'IT Scorecard*' -ErrorAction SilentlyContinue | ForEach-Object {
   Write-Host "   removing firewall rule: $($_.DisplayName)"
   Remove-NetFirewallRule -Name $_.Name -ErrorAction SilentlyContinue
 }

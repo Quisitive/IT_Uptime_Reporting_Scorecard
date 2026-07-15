@@ -12,7 +12,7 @@ than collecting them automatically.
 - Live-calculated System Uptime %, tiered outage notices, event funnels, SAN utilization bars.
 - Configurable, transparent Health Index.
 - Multiple saved reporting periods; JSON export/import; print / Save-as-PDF.
-- Light/dark theme; Nonin-branded (logo embedded as a data URI — fully self-contained).
+- Light/dark theme; print / Save-as-PDF; fully self-contained (no external dependencies).
 
 ## When to use which
 | | Standalone (this) | Collector ([../](../README.md)) |

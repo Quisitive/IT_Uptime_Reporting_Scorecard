@@ -422,9 +422,9 @@ async function viewSetup() {
       <div class="field"><label>Security</label><select id="sSec"><option value="none" ${c.smtp.secure === 'none' ? 'selected' : ''}>None</option><option value="starttls" ${c.smtp.secure === 'starttls' ? 'selected' : ''}>STARTTLS</option><option value="tls" ${c.smtp.secure === 'tls' ? 'selected' : ''}>TLS</option></select></div>
       <div class="field"><label>Auth user (optional)</label><input id="sUser"></div>
       <div class="field"><label>Password (optional)</label><input id="sPass" type="password"></div>
-      <div class="field"><label>From</label><input id="sFrom" placeholder="scorecard@nonin.local"></div>
+      <div class="field"><label>From</label><input id="sFrom" placeholder="scorecard@example.com"></div>
     </div>
-    <div class="field"><label>Send reports/alerts to (comma-separated)</label><input id="sTo" placeholder="it@nonin.local, soc@nonin.local"></div>
+    <div class="field"><label>Send reports/alerts to (comma-separated)</label><input id="sTo" placeholder="it@example.com, soc@example.com"></div>
     <div class="row"><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="sEnabled" ${c.smtp.emailEnabled ? 'checked' : ''}> Enable email delivery</label>
       <button class="btn" id="sSave">Save</button><button class="btn" id="sTest">Send test</button></div>
     <div id="sResult" class="sub" style="margin-top:8px"></div>

@@ -18,11 +18,11 @@ const { startMs, endMs } = periodRange(period, bh.timezoneOffsetMinutes);
 const intervalMs = cfg.probe.intervalSec * 1000;
 const targets = cfg.probe.targets;
 
-// Inject two outages during business hours: 2.0h on FileServer, 0.75h portal blip.
+// Inject two outages during business hours using the first two configured targets (if present).
 const outages = [
-  { target: 'FileServer', startFrac: 0.35, hours: 2.0 },
-  { target: 'WebPortal',  startFrac: 0.62, hours: 0.75 }
-];
+  targets[0] ? { target: targets[0].name, startFrac: 0.35, hours: 2.0 }   : null,
+  targets[1] ? { target: targets[1].name, startFrac: 0.62, hours: 0.75 }  : null
+].filter(Boolean);
 function isDown(name, ts) {
   return outages.some((o) => {
     if (o.target !== name) return false;
@@ -51,19 +51,19 @@ for (let ts = startMs; ts < Math.min(endMs, Date.now()); ts += intervalMs) {
 }
 _db.exec('COMMIT');
 
-// Disk snapshots (latest wins).
-recordDisk(endMs - 1, 'SAN01-NIMBLE-PROD-13700', 16.2e12, 20.8e12); // 77.9%
-recordDisk(endMs - 1, 'SAN01-NIMBLE-COLO-USI', 9.1e12, 20.8e12);   // 43.8%
-recordDisk(endMs - 1, 'MSA', 38.4e12, 43.0e12);                     // 89.3% -> red
+// Disk snapshots — one per configured SAN (latest wins); fill in realistic used/total values.
+for (const s of cfg.sans) {
+  recordDisk(endMs - 1, s.name, 0, 0);
+}
 
 // Event metrics (as if pulled from Defender / Perch / OverWatch report).
 upsertEventMetric(period, 'endpoint', 128934, 6, 2, 'manual');   // Defender OverWatch report
 upsertEventMetric(period, 'ids', 41250000, 214, 3, 'perch-api'); // Perch Hero
 upsertEventMetric(period, 'defender', 47, 12, 4, 'defender-api'); // MS Defender incidents
 
-// Incident-response notices.
-addNotice(startMs + (endMs - startMs) * 0.35, 2, 'FileServer outage — SMB unavailable ~2h');
-addNotice(startMs + (endMs - startMs) * 0.62, 3, 'Web portal degraded — brief 45m interruption');
+// Incident-response notices (tied to the first two outages if targets were available).
+if (outages[0]) addNotice(startMs + (endMs - startMs) * outages[0].startFrac, 2, `${outages[0].target} outage — ~${outages[0].hours}h`);
+if (outages[1]) addNotice(startMs + (endMs - startMs) * outages[1].startFrac, 3, `${outages[1].target} degraded — ~${outages[1].hours}h`);
 
 console.log(`Seeded ${n} probe cycles for period ${period}.`);
 console.log('Start the collector (npm start) and open http://localhost:8080');

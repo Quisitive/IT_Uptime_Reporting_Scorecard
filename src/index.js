@@ -14,7 +14,7 @@ import { buildScorecard } from './aggregate.js';
 import { currentPeriod } from './util/time.js';
 
 const cfg = loadConfig();
-console.log('=== Nonin Scorecard Collector v0.2 ===');
+console.log('=== IT Scorecard Collector v0.2 ===');
 initDb(cfg.database.path);
 console.log(`[db] ${cfg.database.path}`);
 
