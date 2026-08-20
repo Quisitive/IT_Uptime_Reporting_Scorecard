@@ -1,0 +1,24 @@
+let timezoneOffsetMinutes = toscalar(scorecard_config | project businessTimezoneOffsetMinutes);
+let businessDays = toscalar(scorecard_config | project businessDays);
+let businessStartHour = toscalar(scorecard_config | project businessStartHour);
+let businessEndHour = toscalar(scorecard_config | project businessEndHour);
+let businessBins = materialize(
+  range bucket from bin(startTime, 1m) to bin(endTime, 1m) step 1m
+  | extend localTime = bucket + timezoneOffsetMinutes * 1m
+  | extend businessDay = toint(dayofweek(localTime) / 1d), businessHour = datetime_part('Hour', localTime)
+  | where set_has_element(businessDays, businessDay)
+  | where businessHour >= businessStartHour and businessHour < businessEndHour
+  | project bucket
+);
+let expectedMinutes = toscalar(businessBins | summarize count());
+let observed =
+  Heartbeat
+  | where TimeGenerated between (startTime .. endTime)
+  | summarize hasHeartbeat = count() > 0 by Computer, bucket = bin(TimeGenerated, 1m);
+observed
+| join kind=inner businessBins on bucket
+| summarize upMinutes = count(), lastHeartbeat = max(bucket) by Computer
+| extend expectedMinutes = expectedMinutes
+| extend downMinutes = expectedMinutes - upMinutes
+| extend uptimePct = iff(expectedMinutes == 0, real(null), round(100.0 * todouble(upMinutes) / todouble(expectedMinutes), 3))
+| project Computer, uptimePct, upMinutes, downMinutes, expectedMinutes, lastHeartbeat

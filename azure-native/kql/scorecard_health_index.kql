@@ -1,0 +1,47 @@
+let uptimeFloorBelowTargetPct = toscalar(scorecard_config | project uptimeFloorBelowTargetPct);
+let diskWarnPct = toscalar(scorecard_config | project diskWarnPct);
+let diskCritPct = toscalar(scorecard_config | project diskCritPct);
+let uptimeWeight = toscalar(scorecard_config | project uptimeWeight);
+let diskWeight = toscalar(scorecard_config | project diskWeight);
+let securityWeight = toscalar(scorecard_config | project securityWeight);
+let pointsPerIntervention = toscalar(scorecard_config | project pointsPerIntervention);
+let maxInterventionPenalty = toscalar(scorecard_config | project maxInterventionPenalty);
+let escalationRatePer1000 = toscalar(scorecard_config | project escalationRatePer1000);
+let maxEscalationPenalty = toscalar(scorecard_config | project maxEscalationPenalty);
+let slas = materialize(scorecard_sla_uptime(startTime, endTime));
+let uptimePct = toscalar(slas | where tier == 1 | summarize min(uptimePct));
+let uptimeTargetPct = toscalar(slas | where tier == 1 | summarize max(targetPct));
+let uptimeFloor = uptimeTargetPct - uptimeFloorBelowTargetPct;
+let uptimeScore = case(isnull(uptimePct), 0.0, uptimePct >= uptimeTargetPct, 100.0, uptimePct <= uptimeFloor, 0.0, round((uptimePct - uptimeFloor) / (uptimeTargetPct - uptimeFloor) * 100.0, 1));
+let worstDiskUsedPct = toscalar(
+  InsightsMetrics
+  | where TimeGenerated between (startTime .. endTime)
+  | where Namespace == 'LogicalDisk' and Name == 'FreeSpacePercentage'
+  | summarize worstUsedPct = max(100.0 - todouble(Val))
+);
+let diskScore = case(isnull(worstDiskUsedPct), 100.0, worstDiskUsedPct <= diskWarnPct, round(100.0 - (worstDiskUsedPct / diskWarnPct * 40.0), 1), worstDiskUsedPct <= diskCritPct, round(60.0 - ((worstDiskUsedPct - diskWarnPct) / (diskCritPct - diskWarnPct) * 40.0), 1), round(max_of(0.0, 20.0 - ((worstDiskUsedPct - diskCritPct) / (100.0 - diskCritPct) * 20.0)), 1));
+let securityRows = materialize(
+  union isfuzzy=true
+    (SecurityIncident | where TimeGenerated between (startTime .. endTime) | project Severity, Status, Classification),
+    (SecurityAlert | where TimeGenerated between (startTime .. endTime) | project Severity, Status = tostring(''), Classification = tostring(''))
+);
+let dataPoints = toscalar(securityRows | summarize count());
+let escalations = toscalar(securityRows | where Severity in~ ('Medium', 'High') | summarize count());
+let interventions = toscalar(securityRows | where Classification =~ 'TruePositive' or Status =~ 'Closed' | summarize count());
+let interventionPenalty = min_of(maxInterventionPenalty, todouble(interventions) * pointsPerIntervention);
+let escalationPenalty = min_of(maxEscalationPenalty, iff(dataPoints == 0, 0.0, todouble(escalations) / todouble(dataPoints) * 1000.0 * escalationRatePer1000));
+let securityScore = round(max_of(0.0, 100.0 - interventionPenalty - escalationPenalty), 1);
+let totalWeight = uptimeWeight + diskWeight + securityWeight;
+print
+  periodStart = startTime,
+  periodEnd = endTime,
+  healthIndex = round((uptimeScore * uptimeWeight + diskScore * diskWeight + securityScore * securityWeight) / totalWeight, 1),
+  uptimePct = uptimePct,
+  uptimeTargetPct = uptimeTargetPct,
+  uptimeScore = uptimeScore,
+  worstDiskUsedPct = worstDiskUsedPct,
+  diskScore = diskScore,
+  securityDataPoints = dataPoints,
+  securityEscalations = escalations,
+  securityInterventions = interventions,
+  securityScore = securityScore

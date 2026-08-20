@@ -1,0 +1,10 @@
+[
+  {
+    "resourceId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-prod/providers/Microsoft.Compute/virtualMachines/DC01",
+    "os": "windows"
+  },
+  {
+    "resourceId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-prod/providers/Microsoft.HybridCompute/machines/AppLinux01",
+    "os": "linux"
+  }
+]

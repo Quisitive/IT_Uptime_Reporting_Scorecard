@@ -1,0 +1,94 @@
+{
+  "title": "IT Uptime Scorecard - Azure Native",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5m",
+  "tags": ["it-uptime-scorecard", "azure-monitor"],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Health Index",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "scorecard_health_index($TimeFrom, $TimeTo) | project healthIndex" }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 75 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Tier 1 Uptime",
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "scorecard_sla_uptime($TimeFrom, $TimeTo) | where tier == 1 | summarize uptimePct=min(uptimePct)" }
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percent", "decimals": 3 } }
+    },
+    {
+      "type": "stat",
+      "title": "Machines Seen",
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "Heartbeat | where TimeGenerated between ($TimeFrom .. $TimeTo) | summarize Machines=dcount(Computer)" }
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 } }
+    },
+    {
+      "type": "stat",
+      "title": "Security Escalations",
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "scorecard_health_index($TimeFrom, $TimeTo) | project securityEscalations" }
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 } }
+    },
+    {
+      "type": "table",
+      "title": "SLA Results",
+      "gridPos": { "h": 8, "w": 14, "x": 0, "y": 5 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "scorecard_sla_uptime($TimeFrom, $TimeTo) | project slaName, tier, targetPct, uptimePct, downMinutes, members, breached" }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Machine Uptime",
+      "gridPos": { "h": 8, "w": 10, "x": 14, "y": 5 },
+      "targets": [
+        {
+          "queryType": "Azure Log Analytics",
+          "azureLogAnalytics": { "query": "scorecard_machine_uptime($TimeFrom, $TimeTo) | order by uptimePct asc" }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+datatable(slaName:string, tier:int, targetPct:real, members:dynamic)
+[
+  'Core Identity', 1, 99.9, dynamic(['', 'DC01', 'DC02']),
+  'File Services', 2, 99.5, dynamic(['', 'FileServer']),
+  'Business Apps', 2, 99, dynamic(['', 'AppLinux01', 'WebPortal'])
+]

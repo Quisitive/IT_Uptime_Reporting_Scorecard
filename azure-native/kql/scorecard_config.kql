@@ -1,0 +1,16 @@
+print
+  businessTimezoneOffsetMinutes = -360,
+  businessDays = dynamic([1, 2, 3, 4, 5]),
+  businessStartHour = 8,
+  businessEndHour = 18,
+  standardMonthlyHours = 240,
+  uptimeWeight = 50,
+  diskWeight = 25,
+  securityWeight = 25,
+  uptimeFloorBelowTargetPct = 2,
+  diskWarnPct = 70,
+  diskCritPct = 85,
+  pointsPerIntervention = 8,
+  maxInterventionPenalty = 60,
+  escalationRatePer1000 = 5,
+  maxEscalationPenalty = 40

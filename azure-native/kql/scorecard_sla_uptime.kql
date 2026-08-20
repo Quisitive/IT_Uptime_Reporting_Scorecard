@@ -1,0 +1,31 @@
+let timezoneOffsetMinutes = toscalar(scorecard_config | project businessTimezoneOffsetMinutes);
+let businessDays = toscalar(scorecard_config | project businessDays);
+let businessStartHour = toscalar(scorecard_config | project businessStartHour);
+let businessEndHour = toscalar(scorecard_config | project businessEndHour);
+let businessBins = materialize(
+  range bucket from bin(startTime, 1m) to bin(endTime, 1m) step 1m
+  | extend localTime = bucket + timezoneOffsetMinutes * 1m
+  | extend businessDay = toint(dayofweek(localTime) / 1d), businessHour = datetime_part('Hour', localTime)
+  | where set_has_element(businessDays, businessDay)
+  | where businessHour >= businessStartHour and businessHour < businessEndHour
+  | extend joinKey = 1
+  | project bucket, joinKey
+);
+let observed =
+  Heartbeat
+  | where TimeGenerated between (startTime .. endTime)
+  | summarize hasHeartbeat = count() > 0 by Computer, bucket = bin(TimeGenerated, 1m);
+let expectedMinutes = toscalar(businessBins | summarize count());
+scorecard_slas
+| mv-expand Computer = members to typeof(string)
+| extend joinKey = 1
+| join kind=inner businessBins on joinKey
+| join kind=leftouter observed on Computer, bucket
+| extend memberUp = toint(coalesce(hasHeartbeat, false))
+| summarize allMembersUp = min(memberUp), members = dcount(Computer) by slaName, tier, targetPct, bucket
+| summarize upMinutes = sum(allMembersUp), downMinutes = countif(allMembersUp == 0), members = max(members) by slaName, tier, targetPct
+| extend expectedMinutes = expectedMinutes
+| extend uptimePct = iff(expectedMinutes == 0, real(null), round(100.0 * todouble(upMinutes) / todouble(expectedMinutes), 3))
+| extend breached = uptimePct < targetPct
+| project slaName, tier, targetPct, members, uptimePct, upMinutes, downMinutes, expectedMinutes, breached
+| order by tier asc, slaName asc
